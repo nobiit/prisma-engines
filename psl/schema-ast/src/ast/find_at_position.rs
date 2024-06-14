@@ -57,6 +57,8 @@ pub enum SchemaPosition<'ast> {
 pub enum ModelPosition<'ast> {
     /// In the model, but not somewhere more specific.
     Model,
+    /// In the name of the model (model name).
+    Name(&'ast str),
     /// In an attribute (attr name, attr index, position).
     ModelAttribute(&'ast str, usize, AttributePosition<'ast>),
     /// In a field.
@@ -75,6 +77,10 @@ impl<'ast> ModelPosition<'ast> {
             if attr.span().contains(position) {
                 return ModelPosition::ModelAttribute(&attr.name.name, attr_id, AttributePosition::new(attr, position));
             }
+        }
+
+        if model.name.span.contains(position) {
+            return ModelPosition::Name(model.name());
         }
 
         ModelPosition::Model
@@ -115,6 +121,8 @@ impl<'ast> EnumPosition<'ast> {
 pub enum FieldPosition<'ast> {
     /// Nowhere specific inside the field
     Field,
+    /// In the field's type definition (type name).
+    Type(&'ast str),
     /// In an attribute. (name, idx, optional arg)
     Attribute(&'ast str, usize, Option<&'ast str>),
 }
