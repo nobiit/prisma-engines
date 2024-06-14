@@ -7,39 +7,24 @@ mod relations;
 use log::warn;
 use lsp_types::{CodeActionOrCommand, CodeActionParams, Diagnostic, Range, TextEdit, Url, WorkspaceEdit};
 use psl::{
-    diagnostics::{FileId, Span},
+    diagnostics::Span,
     parser_database::{
         ast,
         walkers::{ModelWalker, RefinedRelationWalker, ScalarFieldWalker},
-        ParserDatabase, SourceFile,
+        SourceFile,
     },
     schema_ast::ast::{Attribute, IndentationType, NewlineType, WithSpan},
-    Configuration, Datasource, PreviewFeature,
+    PreviewFeature,
 };
 use std::collections::HashMap;
 
-pub(super) struct CodeActionsContext<'a> {
-    pub(super) db: &'a ParserDatabase,
-    pub(super) config: &'a Configuration,
-    pub(super) initiating_file_id: FileId,
-    pub(super) lsp_params: CodeActionParams,
-}
+use crate::LSPContext;
+
+pub(super) type CodeActionsContext<'a> = LSPContext<'a, CodeActionParams>;
 
 impl<'a> CodeActionsContext<'a> {
-    pub(super) fn initiating_file_source(&self) -> &str {
-        self.db.source(self.initiating_file_id)
-    }
-
-    pub(super) fn initiating_file_uri(&self) -> &str {
-        self.db.file_name(self.initiating_file_id)
-    }
-
     pub(super) fn diagnostics(&self) -> &[Diagnostic] {
-        &self.lsp_params.context.diagnostics
-    }
-
-    pub(super) fn datasource(&self) -> Option<&Datasource> {
-        self.config.datasources.first()
+        &self.params.context.diagnostics
     }
 
     /// A function to find diagnostics matching the given span. Used for
@@ -88,7 +73,7 @@ pub(crate) fn available_actions(
         db: &validated_schema.db,
         config,
         initiating_file_id,
-        lsp_params: params,
+        params: &params,
     };
 
     let initiating_ast = validated_schema.db.ast(initiating_file_id);
