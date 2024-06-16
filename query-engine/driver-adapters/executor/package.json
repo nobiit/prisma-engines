@@ -24,7 +24,7 @@
   "sideEffects": false,
   "license": "Apache-2.0",
   "dependencies": {
-    "@effect/schema": "0.64.20",
+    "@effect/schema": "0.67.21",
     "@prisma/adapter-d1": "workspace:*",
     "@prisma/adapter-libsql": "workspace:*",
     "@prisma/adapter-neon": "workspace:*",
@@ -36,15 +36,15 @@
     "query-engine-wasm-baseline": "npm:@prisma/query-engine-wasm@0.0.19",
     "query-engine-wasm-latest": "npm:@prisma/query-engine-wasm@latest",
     "ts-pattern": "5.1.1",
-    "undici": "6.13.0",
-    "wrangler": "3.50.0",
-    "ws": "8.16.0"
+    "undici": "6.18.2",
+    "wrangler": "3.59.0",
+    "ws": "8.17.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20240405.0",
-    "@types/node": "20.12.7",
-    "tsup": "8.0.2",
-    "tsx": "4.7.2",
+    "@cloudflare/workers-types": "4.20240605.0",
+    "@types/node": "20.14.2",
+    "tsup": "8.1.0",
+    "tsx": "4.15.1",
     "typescript": "5.4.5"
   }
 }
