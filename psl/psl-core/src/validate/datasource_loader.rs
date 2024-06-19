@@ -11,7 +11,7 @@ use parser_database::{
     coerce, coerce_array, coerce_opt,
 };
 use schema_ast::ast::WithSpan;
-use std::{borrow::Cow, collections::HashMap};
+use std::collections::HashMap;
 
 const PREVIEW_FEATURES_KEY: &str = "previewFeatures";
 const SCHEMAS_KEY: &str = "schemas";
@@ -74,12 +74,6 @@ fn lift_datasource(
 
     let (provider, provider_arg) = match args.remove(PROVIDER_KEY) {
         Some((_span, provider_arg)) => {
-            if provider_arg.is_env_expression() {
-                let msg = Cow::Borrowed("A datasource must not use the env() function in the provider argument.");
-                diagnostics.push_error(DatamodelError::new_functional_evaluation_error(msg, ast_source.span));
-                return None;
-            }
-
             let provider = match coerce_opt::string(provider_arg) {
                 Some("") => {
                     diagnostics.push_error(DatamodelError::new_source_validation_error(
